@@ -6,10 +6,16 @@ from typing import Dict, List
 from slack_bolt import App
 import requests
 from blocks import block_dict
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+
+# Install the Slack app and get xoxb- token in advance
+app = App(token=os.environ["SLACK_BOT_TOKEN"])
 
 # Initializes your app with your bot token and signing secret
 print(os.environ.get("SLACK_BOT_TOKEN"))
 print(os.environ.get("SLACK_SIGNING_SECRET"))
+print(os.environ.get("SLACK_APP_TOKEN"))
+
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
     signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
@@ -24,14 +30,6 @@ def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
         'blocks': json.dumps(blocks) if blocks else None
     }).json()	
 
-# Start your app
-if __name__ == "__main__":
-    #app.start(port=int(os.environ.get("PORT", 3000)))
-    post_message_to_slack('Hello World!', block_dict['sample_block'])
-
-
-
-
 
 
 
@@ -41,6 +39,7 @@ if __name__ == "__main__":
 ###LISTENERS### just playing around with them for now, not using any yet
 @app.shortcut("open_modal")
 def open_modal(ack, shortcut, client, logger):
+
     # Acknowledge shortcut request
     ack()
 
@@ -77,8 +76,13 @@ def open_modal(ack, shortcut, client, logger):
     except:
         logger.error("Error creating conversation: {}")
 
+@app.event("app_mention")
+def event_test(say):
+    say("Hi there!")
+
 @app.message("knock knock")
 def ask_who(message, say):
+    print('askwho')
     say("_Who's there?_")
 
 @app.event("app_home_opened")
@@ -137,3 +141,11 @@ def repeat_text(ack, respond, command):
     # Acknowledge command request
     ack()
     respond(f"{command['text']}")
+
+
+
+# Start your app
+if __name__ == "__main__":
+    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    #app.start(port=int(os.environ.get("PORT", 3000)))
+    # post_message_to_slack('Hello World!', block_dict['sample_block'])
