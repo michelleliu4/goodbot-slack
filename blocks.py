@@ -40,4 +40,47 @@ block_dict = {
 			]
 		}
 	]
+
+	
 }
+
+message_to_send = { "blocks": [
+        {
+            "type": "input",
+            "element": {
+                    "type": "radio_buttons",
+                    "options": [
+                            {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                            "emoji": True
+                                },
+                                "value": "value-0"
+                            },
+                        {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                            "emoji": True
+                                },
+                                "value": "value-1"
+                                },
+                        {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                            "emoji": True
+                                },
+                                "value": "value-2"
+                                }
+                    ],
+                "action_id": "radio_buttons-action"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "HOW DO YOU FEEL ABOUT COMPANY CULTURE",
+                "emoji": True
+            }
+        }
+    ]}
