@@ -372,6 +372,59 @@ block_dict = {
 				],
 				"action_id": "radio_buttons-action"
 			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How connected to your co-workers do you feel? 🥰"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
 		}
 	]
 	
