@@ -2,6 +2,7 @@
 import datetime
 import json
 import os
+import slack
 from typing import Dict, List
 # Use the package we installed
 from slack_bolt import App
@@ -9,6 +10,11 @@ from slack_sdk.errors import SlackApiError
 import requests
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+
+
+from flask import Flask
+from slackeventsapi import SlackEventAdapter
+from slack_sdk import WebClient
 
 # Install the Slack app and get xoxb- token in advance
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
@@ -36,9 +42,14 @@ def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
         print('error')
 
 
+
+hours = 23
+minutes = 52
+print(minutes)
+
 def schedule_messages(blocks: List[Dict[str, str]] = None):
     tomorrow = datetime.date.today() #+ datetime.timedelta(days=1)
-    scheduled_time = datetime.time(hour=22, minute=45)
+    scheduled_time = datetime.time(hour=hours, minute=minutes)
     schedule_timestamp = datetime.datetime.combine(tomorrow, scheduled_time).strftime('%s')
 
     try:
@@ -56,7 +67,33 @@ def schedule_messages(blocks: List[Dict[str, str]] = None):
 
 
 
-###LISTENERS### just playing around with them for now, not using any yet
+#dictionary of resources to send back
+helpful_resources = {}
+
+
+
+
+BOT_ID = 'B043P5P2PEZ'
+@app.event("message")
+def message_response(payload, say):
+    print(payload)
+    channel_id = payload['channel']
+    text  = payload['text']
+    user_id = payload['user']
+    print(text)
+
+    if user_id != BOT_ID:
+        # here is ideally the spot to run the sementiment analysis function
+        if text == "hi":
+            say("Hello")
+        else:
+            say("Hey")
+
+
+        
+
+
+##LISTENERS### just playing around with them for now, not using any yet
 @app.shortcut("open_modal")
 def open_modal(ack, shortcut, client, logger):
 
@@ -164,8 +201,16 @@ def repeat_text(ack, respond, command):
 
 
 
+
+
+
 # Start your app
 if __name__ == "__main__":
-    #SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
     schedule_messages(block_dict['sample_block'])
+
+    
+    
+    
+    
