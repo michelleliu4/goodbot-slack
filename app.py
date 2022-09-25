@@ -118,7 +118,7 @@ def handle_radio(ack, body, logger):
     #p.pprint(body)
     userId = body['user']['id']
     blocks = body['message']['blocks']
-    p.pprint(body)
+    #p.pprint(body)
     data_rows = []
     for b in blocks:
         if b['type'] != 'section':
@@ -132,29 +132,42 @@ def handle_radio(ack, body, logger):
     write_data(data_rows)
 
 def write_data(data):
+    '''
+    read whole csv, update data
+    wipe csv and put in updated data
+    '''
+    old_data = list(csv.reader(open('radio_actions.csv')))
+    print('old before')
+    p.pprint(old_data)
+
+    block_ids = set()
+    for r in old_data:
+        block_ids.add(r[0])
+
+    print('data')
+    p.pprint(data)
+    for r1 in data:
+        # print('R1 START')
+        if len(r1) != 4: # if response does not exist (user has not selected yet)
+            # print('BLANK ENTRY')
+            continue
+        updated = False
+        # linear search to find matching user_id and block_id
+        for r2 in old_data:
+            if r1[0] == r2[0] and r1[1] == r2[1]: # matching block ids and user ids
+                # print(r1, r2)
+                r2[3] = r1[3]
+                updated = True
+                break
+        if updated:
+            continue
+        else:
+            # print('NEW ENTRY')
+            old_data.append(r1)
+    
+    print('old after')
+    p.pprint(old_data)
     with open('radio_actions.csv', 'w') as f:
-        '''
-        read whole csv, update data
-        wipe csv and put in updated data
-        '''
-        old_data = list(csv.reader(open('radio_actions.csv')))
-        block_ids = set()
-        for r in old_data:
-            block_ids.add(r[0])
-
-        for r1 in data:
-            if len(r1) != 4: # if response does not exist (user has not selected yet)
-                continue
-            if r1[0] in block_ids:
-                # linear search for matching entry
-                for r2 in old_data:
-                    if r1[0] == r2[0] and r[1] == r2[1]: # matching block ids and user ids
-                        r2[3] = r1[3]
-                        break
-            else:
-                old_data.append(r1)
-
-        p.pprint(old_data)
         writer = csv.writer(f)
         for row in old_data:
             writer.writerow(row)
