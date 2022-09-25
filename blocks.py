@@ -39,10 +39,344 @@ block_dict = {
 				}
 			]
 		}
+	],
+	'survey_block': [
+		{
+			"type": "divider"
+		},
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Monthly Employee Vibe Check 😎",
+				"emoji": True
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How are you today? 🥴"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How well supported do you feel at work? 🤒"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How diverse and inclusive do you feel the company is? 😜"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How satisfied are you with the company's leadership? 🥸"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How connected to your co-workers do you feel? 🥰"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		}
+		
+	],
+	'short_survey': [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "How are you today? 🥴"
+			},
+			"accessory": {
+				"type": "radio_buttons",
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️",
+							"emoji": True
+						},
+						"value": "1"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️",
+							"emoji": True
+						},
+						"value": "2"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "3"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "4"
+					},
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "⭐️⭐️⭐️⭐️⭐️",
+							"emoji": True
+						},
+						"value": "5"
+					}
+				],
+				"action_id": "radio_buttons-action"
+			}
+		}
 	]
-
 	
 }
+
 
 message_to_send = { "blocks": [
         {
