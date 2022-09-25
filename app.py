@@ -94,6 +94,38 @@ def classify_text(text):
         print(f"category  : {category.name}")
         print(f"confidence: {category.confidence:.0%}")
 
+def analyze_text_entities(text):
+    client = language.LanguageServiceClient()
+    document = language.Document(content=text, type_=language.Document.Type.PLAIN_TEXT)
+
+    response = client.analyze_entities(document=document)
+
+    for entity in response.entities:
+        print("=" * 80)
+        results = dict(
+            name=entity.name,
+            type=entity.type_.name,
+            salience=f"{entity.salience:.1%}",
+            wikipedia_url=entity.metadata.get("wikipedia_url", "-"),
+            mid=entity.metadata.get("mid", "-"),
+        )
+        for k, v in results.items():
+            print(f"{k:15}: {v}")
+
+def analyze_text_sentiment(text):
+    client = language.LanguageServiceClient()
+    document = language.Document(content=text, type_=language.Document.Type.PLAIN_TEXT)
+
+    response = client.analyze_sentiment(document=document)
+
+    sentiment = response.document_sentiment
+    results = dict(
+        text=text,
+        score=f"{sentiment.score:.1%}",
+        magnitude=f"{sentiment.magnitude:.1%}",
+    )
+    for k, v in results.items():
+        print(f"{k:10}: {v}")
 
 BOT_ID = 'B043P5P2PEZ'
 @app.event("message")
@@ -113,6 +145,9 @@ def message_response(payload, say):
     if user_id != BOT_ID:
         # here is ideally the spot to run the sementiment analysis function
         classify_text(temp)
+        analyze_text_entities(temp)
+        analyze_text_sentiment(temp)
+
         if text == "hi":
             say("Hello")
         else:
