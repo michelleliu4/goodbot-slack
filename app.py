@@ -84,8 +84,8 @@ def message_response(payload, say):
 
     if user_id != BOT_ID:
         # here is ideally the spot to run the sementiment analysis function
-        if text == "hi":
-            say("Hello")
+        if text == "Where can I get resources to releave my stress?":
+            say("Here are some resources to offer by the company to releave stress")
         else:
             say("Hey")
 
