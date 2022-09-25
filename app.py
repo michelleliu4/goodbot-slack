@@ -4,7 +4,8 @@ import json
 import os
 from typing import Dict, List
 from urllib import response
-# Use the package we installed
+
+# External packages
 from slack_bolt import App
 from slack_sdk.errors import SlackApiError
 import requests
@@ -12,28 +13,36 @@ import pprint
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-
-# Install the Slack app and get xoxb- token in advance
-app = App(token=os.environ["SLACK_BOT_TOKEN"])
-p = pprint.PrettyPrinter()
-
-# Initializes your app with your bot token and signing secret
-print(os.environ.get("SLACK_BOT_TOKEN"))
-print(os.environ.get("SLACK_SIGNING_SECRET"))
-print(os.environ.get("SLACK_APP_TOKEN"))
-
+# Import slack_tokens.json
+import json
+with open('slack_tokens.json') as json_file:
+    data = json.load(json_file)
+    
 app = App(
-    token=os.environ.get("SLACK_BOT_TOKEN"),
-    signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
+    token=data["SLACK_BOT_TOKEN"],
+    signing_secret=data["SLACK_SIGNING_SECRET"]
 )
+# # Install the Slack app and get xoxb- token in advance
+# app = App(token=os.environ["SLACK_BOT_TOKEN"])
+# p = pprint.PrettyPrinter()
+
+# # Initializes your app with your bot token and signing secret
+# print(os.environ.get("SLACK_BOT_TOKEN"))
+# print(os.environ.get("SLACK_SIGNING_SECRET"))
+# print(os.environ.get("SLACK_APP_TOKEN"))
+
+# app = App(
+#     token=os.environ.get("SLACK_BOT_TOKEN"),
+#     signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
+# )
 
 def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
-    print(os.environ.get("SLACK_BOT_TOKEN"))
+    print(data["SLACK_BOT_TOKEN"])
     try:
         app.client.chat_postMessage(
             channel = 'C043JK0TCEA', 
             text = text,
-            token = os.environ.get("SLACK_BOT_TOKEN"),
+            token = data["SLACK_BOT_TOKEN"],
             blocks = json.dumps(blocks) if blocks else None
         )
     except SlackApiError as e:
@@ -48,7 +57,7 @@ def schedule_messages(blocks: List[Dict[str, str]] = None):
     try:
         # Call the chat.scheduleMessage method using the WebClient
         result = app.client.chat_scheduleMessage(
-            token = os.environ.get("SLACK_BOT_TOKEN"),
+            token = data["SLACK_BOT_TOKEN"],
             text = f'SCHEDULED MESSAGE FOR {schedule_timestamp}',
             post_at= schedule_timestamp,
             channel = 'C043JK0TCEA', 
@@ -198,6 +207,6 @@ def repeat_text(ack, respond, command):
 # Start your app
 if __name__ == "__main__":
     post_message_to_slack(text='hello world', blocks=block_dict['short_survey'])
-    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    SocketModeHandler(app, data["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
     #schedule_messages(block_dict['sample_block'])
