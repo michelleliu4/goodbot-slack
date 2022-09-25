@@ -17,24 +17,11 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 import json
 with open('slack_tokens.json') as json_file:
     data = json.load(json_file)
-    
+
 app = App(
     token=data["SLACK_BOT_TOKEN"],
     signing_secret=data["SLACK_SIGNING_SECRET"]
 )
-# # Install the Slack app and get xoxb- token in advance
-# app = App(token=os.environ["SLACK_BOT_TOKEN"])
-# p = pprint.PrettyPrinter()
-
-# # Initializes your app with your bot token and signing secret
-# print(os.environ.get("SLACK_BOT_TOKEN"))
-# print(os.environ.get("SLACK_SIGNING_SECRET"))
-# print(os.environ.get("SLACK_APP_TOKEN"))
-
-# app = App(
-#     token=os.environ.get("SLACK_BOT_TOKEN"),
-#     signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
-# )
 
 def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
     print(data["SLACK_BOT_TOKEN"])
@@ -202,7 +189,16 @@ def repeat_text(ack, respond, command):
     ack()
     respond(f"{command['text']}")
 
+# Listens for command
+@app.command("/anonymous")
+def my_first_slash_command():
+    info = request.form
+    channel = info['channel_id']
 
+    app.chat_postMessage(
+        channel= channel,
+        text= "Hi there!")
+    return make_response("", 200)
 
 # Start your app
 if __name__ == "__main__":

@@ -324,7 +324,7 @@ block_dict = {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "How are you today? 🥴"
+				"text": "How are you today?"
 			},
 			"accessory": {
 				"type": "radio_buttons",
