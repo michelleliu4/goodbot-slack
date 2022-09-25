@@ -3,15 +3,19 @@ import datetime
 import json
 import os
 from typing import Dict, List
+from urllib import response
 # Use the package we installed
 from slack_bolt import App
 from slack_sdk.errors import SlackApiError
 import requests
+import pprint
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
+
 # Install the Slack app and get xoxb- token in advance
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
+p = pprint.PrettyPrinter()
 
 # Initializes your app with your bot token and signing secret
 print(os.environ.get("SLACK_BOT_TOKEN"))
@@ -27,13 +31,13 @@ def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
     print(os.environ.get("SLACK_BOT_TOKEN"))
     try:
         app.client.chat_postMessage(
-            token = os.environ.get("SLACK_BOT_TOKEN"),
-            text = '',
             channel = 'C043JK0TCEA', 
+            text = text,
+            token = os.environ.get("SLACK_BOT_TOKEN"),
             blocks = json.dumps(blocks) if blocks else None
         )
-    except:
-        print('error')
+    except SlackApiError as e:
+        print(e)
 
 
 def schedule_messages(blocks: List[Dict[str, str]] = None):
@@ -95,6 +99,33 @@ def open_modal(ack, shortcut, client, logger):
 
     except:
         logger.error("Error creating conversation: {}")
+
+
+@app.action("radio_buttons-action")
+def handle_radio(ack, body, logger):
+    ack()
+    '''
+    INPUT
+    userID
+    prompt which is text of block
+    blockId to access response value
+    response value
+    [user_id, block_id, prompt, response]
+    '''
+    #logger.info(body)
+    #p.pprint(body)
+    userId = body['user']['id']
+    blocks = body['message']['blocks']
+    block_ids_prompts = []
+    for b in blocks:
+        block_ids_prompts.append([b['block_id'], userId, b['text']['text']])
+    for e in block_ids_prompts:
+        b_id = e[0]
+        selected = body['state']['values'][b_id]['radio_buttons-action']['selected_option']
+        if selected:
+            e.append(selected['value'])
+    p.pprint(userId)
+    p.pprint(block_ids_prompts)
 
 @app.event("app_mention")
 def event_test(say):
@@ -166,6 +197,7 @@ def repeat_text(ack, respond, command):
 
 # Start your app
 if __name__ == "__main__":
-    #SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    post_message_to_slack(text='hello world', blocks=block_dict['short_survey'])
+    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
-    schedule_messages(block_dict['sample_block'])
+    #schedule_messages(block_dict['sample_block'])
