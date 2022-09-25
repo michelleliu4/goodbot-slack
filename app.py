@@ -1,9 +1,11 @@
 #from msilib.schema import Error
+import datetime
 import json
 import os
 from typing import Dict, List
 # Use the package we installed
 from slack_bolt import App
+from slack_sdk.errors import SlackApiError
 import requests
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -23,16 +25,34 @@ app = App(
 
 def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
     print(os.environ.get("SLACK_BOT_TOKEN"))
-    return requests.post('https://slack.com/api/chat.postMessage', {
-        'token': os.environ.get("SLACK_BOT_TOKEN"),
-        'channel': 'C043JK0TCEA',
-        'text': text,
-        'blocks': json.dumps(blocks) if blocks else None
-    }).json()	
+    try:
+        app.client.chat_postMessage(
+            token = os.environ.get("SLACK_BOT_TOKEN"),
+            text = '',
+            channel = 'C043JK0TCEA', 
+            blocks = json.dumps(blocks) if blocks else None
+        )
+    except:
+        print('error')
 
 
+def schedule_messages(blocks: List[Dict[str, str]] = None):
+    tomorrow = datetime.date.today() #+ datetime.timedelta(days=1)
+    scheduled_time = datetime.time(hour=22, minute=45)
+    schedule_timestamp = datetime.datetime.combine(tomorrow, scheduled_time).strftime('%s')
 
-
+    try:
+        # Call the chat.scheduleMessage method using the WebClient
+        result = app.client.chat_scheduleMessage(
+            token = os.environ.get("SLACK_BOT_TOKEN"),
+            text = f'SCHEDULED MESSAGE FOR {schedule_timestamp}',
+            post_at= schedule_timestamp,
+            channel = 'C043JK0TCEA', 
+            blocks = json.dumps(blocks) if blocks else None
+        )
+        
+    except SlackApiError as e:
+        print(e)
 
 
 
@@ -146,6 +166,6 @@ def repeat_text(ack, respond, command):
 
 # Start your app
 if __name__ == "__main__":
-    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    #SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
-    # post_message_to_slack('Hello World!', block_dict['sample_block'])
+    schedule_messages(block_dict['sample_block'])
