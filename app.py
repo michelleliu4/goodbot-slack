@@ -9,13 +9,15 @@ from slack_bolt import App
 from slack_sdk.errors import SlackApiError
 import requests
 import pprint
+import io
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 import csv
+import matplotlib.pyplot as plt
 
 
 # Install the Slack app and get xoxb- token in advance
-app = App(token=os.environ["SLACK_BOT_TOKEN"])
+#app = App(token=os.environ["SLACK_BOT_TOKEN"])
 channel_id = 'C04467M55B3'
 p = pprint.PrettyPrinter()
 
@@ -239,10 +241,71 @@ def repeat_text(ack, respond, command):
     respond(f"{command['text']}")
 
 
+# Same function as above, but insted of just text, it sends files through slack.
+def post_file_to_slack(
+  text: str, file_name: str, file_bytes: bytes, file_type: str = None, title: str = None
+):
+    try:
+        app.client.files_upload(
+            channel = channel_id, 
+            text = text,
+            token = os.environ.get("SLACK_BOT_TOKEN"),
+            filename=file_name,
+            filetype=file_type,
+            title = text,
+            files= {'file': file_bytes}
+        )
+    except SlackApiError as e:
+        print(e)
+    return
+    return requests.post(
+      'https://slack.com/api/files.upload', 
+      {
+        'token': os.environ.get("SLACK_APP_TOKEN"),
+        'filename': file_name,
+        'channels': channel_id,
+        'filetype': file_type,
+        'initial_comment': text,
+        'title': title
+      },
+      files = { 'file': file_bytes }).json()
+
+
+
+prompts = [
+    'How are you today? :woozy_face:',
+    'How well supported do you feel at work? :face_with_thermometer:',
+    'How diverse and inclusive do you feel the company is? :stuck_out_tongue_winking_eye:',
+    'How satisfied are you with the company\'s leadership? :disguised_face:',
+    'How connected to your co-workers do you feel? :smiling_face_with_3_hearts:',
+]
+
+def chart_surveys():
+    prompts_to_values = {}
+    for p in prompts:
+        prompts_to_values[p] = []
+    data = list(csv.reader(open('radio_actions.csv')))
+    for row in data:
+        prompt = row[2]
+        value = int(row[3])
+        prompts_to_values[prompt].append(value)
+
+    stars = [1,2,3,4,5]
+    for p in prompts:
+        print('plt')
+        plt.bar(stars, [prompts_to_values[p].count(s) for s in stars])
+        plt.gca().set(title=p.split('?')[0]+'?', ylabel='Frequency')
+        plt.show()
+        # buf = io.BytesIO()
+        # plt.savefig(buf, format='png', facecolor="white")
+        # buf.seek(0)
+        # post_file_to_slack("", "", buf)
+
 
 # Start your app
 if __name__ == "__main__":
     #post_message_to_slack(text='hello world', blocks=block_dict['survey_block'])
+    chart_surveys()
     SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
     #schedule_messages(block_dict['sample_block'])
