@@ -4,7 +4,7 @@ import random
 
 c=10
 with open("radio.csv", "w") as f:
-    for i in range(99):
+    for i in range(80):
         id = "U0443S95K" + str(c)
         c+=1
 
