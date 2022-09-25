@@ -79,15 +79,31 @@ def schedule_messages(blocks: List[Dict[str, str]] = None):
 
 
 #dictionary of resources to send back
-helpful_resources = {}
+helpful_resources = {
+    "/Health": "https://www.mountelizabeth.com.sg/healthplus/article/10-ways-improve-health",
+    "/Online Communities": "https://teten.com/how-to-find-the-right-online-communities/",
+    "/People & Society/Family & Relationships": "https://ftnj.com/fostering-and-maintaining-strong-relationships/",
+    "/Reference": "Here is the company website: https://nami.org/help",
+    "/Health/Mental Health": "https://medlineplus.gov/howtoimprovementalhealth.html",
+    "/Health/Mental Health/Anxiety & Stress": "https://medlineplus.gov/howtoimprovementalhealth.html",
+    "/Health/Nursing": "https://www.accessnurse.com/welcome-to-acessnurse/",
+    "/Health/Medical Facilities & Services/Physical Therapy": "https://medlineplus.gov/howtoimprovementalhealth.html",
+    "/Health/Health Conditions/Obesity": "https://www.nutrition.gov/",
+    "/Health/Health Conditions/Eating Disorders": "https://www.nutrition.gov/",
+    "/Health/Health Conditions/Pain Management": "https://www.gwhospital.com/conditions-services/spine-and-pain-center/pain-management",
+    "/Health/Nutrition/Vitamins & Supplements": "https://www.nutrition.gov/",
+    "/Health/Pharmacy": "https://www.cvs.com/"
+}
 
 
-
+cate = ""
 def classify_text(text):
     client = language.LanguageServiceClient()
     document = language.Document(content=text, type=language.Document.Type.PLAIN_TEXT)
 
     response = client.classify_text(document=document)
+
+    cate = category.name
 
     for category in response.categories:
         print("=" * 80)
@@ -148,10 +164,12 @@ def message_response(payload, say):
         analyze_text_entities(temp)
         analyze_text_sentiment(temp)
 
-        if text == "hi":
-            say("Hello")
-        else:
-            say("Hey")
+
+        say(helpful_resources[cate])
+        # if text == "hi":
+        #     say("Hello")
+        # else:
+        #     say("Hey")
 
 
         
