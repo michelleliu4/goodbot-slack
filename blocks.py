@@ -48,7 +48,7 @@ block_dict = {
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "Monthly Employee Vibe Check 😎",
+				"text": "Monthly Workplace Vibe Check 😎",
 				"emoji": True
 			}
 		},

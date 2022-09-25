@@ -11,10 +11,12 @@ import requests
 import pprint
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+import csv
 
 
 # Install the Slack app and get xoxb- token in advance
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
+channel_id = 'C04467M55B3'
 p = pprint.PrettyPrinter()
 
 # Initializes your app with your bot token and signing secret
@@ -31,7 +33,7 @@ def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
     print(os.environ.get("SLACK_BOT_TOKEN"))
     try:
         app.client.chat_postMessage(
-            channel = 'C043JK0TCEA', 
+            channel = channel_id, 
             text = text,
             token = os.environ.get("SLACK_BOT_TOKEN"),
             blocks = json.dumps(blocks) if blocks else None
@@ -51,7 +53,7 @@ def schedule_messages(blocks: List[Dict[str, str]] = None):
             token = os.environ.get("SLACK_BOT_TOKEN"),
             text = f'SCHEDULED MESSAGE FOR {schedule_timestamp}',
             post_at= schedule_timestamp,
-            channel = 'C043JK0TCEA', 
+            channel = 'channel_id', 
             blocks = json.dumps(blocks) if blocks else None
         )
         
@@ -110,22 +112,52 @@ def handle_radio(ack, body, logger):
     prompt which is text of block
     blockId to access response value
     response value
-    [user_id, block_id, prompt, response]
+    [block_id, user_id, prompt, response]
     '''
     #logger.info(body)
     #p.pprint(body)
     userId = body['user']['id']
     blocks = body['message']['blocks']
-    block_ids_prompts = []
+    p.pprint(body)
+    data_rows = []
     for b in blocks:
-        block_ids_prompts.append([b['block_id'], userId, b['text']['text']])
-    for e in block_ids_prompts:
+        if b['type'] != 'section':
+            continue
+        data_rows.append([b['block_id'], userId, b['text']['text']])
+    for e in data_rows:
         b_id = e[0]
         selected = body['state']['values'][b_id]['radio_buttons-action']['selected_option']
         if selected:
             e.append(selected['value'])
-    p.pprint(userId)
-    p.pprint(block_ids_prompts)
+    write_data(data_rows)
+
+def write_data(data):
+    with open('radio_actions.csv', 'w') as f:
+        '''
+        read whole csv, update data
+        wipe csv and put in updated data
+        '''
+        old_data = list(csv.reader(open('radio_actions.csv')))
+        block_ids = set()
+        for r in old_data:
+            block_ids.add(r[0])
+
+        for r1 in data:
+            if len(r1) != 4: # if response does not exist (user has not selected yet)
+                continue
+            if r1[0] in block_ids:
+                # linear search for matching entry
+                for r2 in old_data:
+                    if r1[0] == r2[0] and r[1] == r2[1]: # matching block ids and user ids
+                        r2[3] = r1[3]
+                        break
+            else:
+                old_data.append(r1)
+
+        p.pprint(old_data)
+        writer = csv.writer(f)
+        for row in old_data:
+            writer.writerow(row)
 
 @app.event("app_mention")
 def event_test(say):
@@ -197,7 +229,7 @@ def repeat_text(ack, respond, command):
 
 # Start your app
 if __name__ == "__main__":
-    post_message_to_slack(text='hello world', blocks=block_dict['short_survey'])
+    #post_message_to_slack(text='hello world', blocks=block_dict['survey_block'])
     SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
     #app.start(port=int(os.environ.get("PORT", 3000)))
     #schedule_messages(block_dict['sample_block'])
