@@ -8,6 +8,21 @@ from slack_bolt import App
 import requests
 from blocks import block_dict
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+# from language_analysis import classify_text
+
+
+import requests
+from requests.exceptions import ConnectionError
+from google.cloud import language
+# from google.cloud.language import enums
+# from google.cloud.language import types
+from google.api_core.exceptions import InvalidArgument
+import six
+import sys
+import re
+
+
+
 
 # Install the Slack app and get xoxb- token in advance
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
@@ -32,6 +47,58 @@ def post_message_to_slack(text: str, blocks: List[Dict[str, str]] = None):
     }).json()	
 
 
+def classify_text(text):
+
+    client = language.LanguageServiceClient()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
+    # document = types.Document(
+    #     content=text.encode('utf-8'),
+    #     type=enums.Document.Type.PLAIN_TEXT)
+
+    # categories = client.classify_text(document).categories
+
+#     for category in categories:
+#         print(u'{:<16}: {}'.format('type', category.name))
+#         print(u'{:<16}: {}'.format(
+#             'confidence', category.confidence))
+#         print(u'{:<16}: {}'.format('content', content) + '\n')
+#         print('')
+        
+#         row = f'"{content}",{category.name},{category.confidence}\n'
+#         file.write(row)
+#     file.close()
+        
+# try:
+    classify_text(text)
+# except InvalidArgument as e:
+#     print(f'{e}')
+
+
+
+
+
+
+
+
+BOT_ID = 'B043P5P2PEZ'
+@app.event("message")
+def message_response(payload, say):
+    print(payload)
+    channel_id = payload['channel']
+    text  = payload['text']
+    user_id = payload['user']
+    print(text)
+
+    if user_id != BOT_ID:
+        # here is ideally the spot to run the sementiment analysis function
+        classify_text(text)
+        if text == "hi":
+            say("Hello")
+        else:
+            say("Hey")
 
 
 
