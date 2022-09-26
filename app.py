@@ -97,15 +97,19 @@ helpful_resources = {
 
 
 cate = ""
+cate_list = []
+
 def classify_text(text):
     client = language.LanguageServiceClient()
     document = language.Document(content=text, type=language.Document.Type.PLAIN_TEXT)
 
     response = client.classify_text(document=document)
 
-    cate = category.name
+    # cate = category.name
 
     for category in response.categories:
+        cate = category.name
+        cate_list.append(cate)
         print("=" * 80)
         print(f"category  : {category.name}")
         print(f"confidence: {category.confidence:.0%}")
@@ -140,8 +144,10 @@ def analyze_text_sentiment(text):
         score=f"{sentiment.score:.1%}",
         magnitude=f"{sentiment.magnitude:.1%}",
     )
+
     for k, v in results.items():
         print(f"{k:10}: {v}")
+
 
 BOT_ID = 'B043P5P2PEZ'
 @app.event("message")
@@ -164,8 +170,10 @@ def message_response(payload, say):
         analyze_text_entities(temp)
         analyze_text_sentiment(temp)
 
-
-        say(helpful_resources[cate])
+        # print(cate)
+        for item in cate_list:
+            print(item)
+            say(helpful_resources[item])
         # if text == "hi":
         #     say("Hello")
         # else:
