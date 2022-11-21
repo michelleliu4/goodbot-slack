@@ -1,6 +1,6 @@
 # Social-Good-Hackathon
 
-You're looking at the repository of the best team
+Slack bot that brings workplace satisfaction rates up by giving an anonymous voice to employees.
 
 Environment Setup: 
 
