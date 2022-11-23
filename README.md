@@ -1,6 +1,6 @@
 # Social-Good-Hackathon
 
-(Bronze award) Slack bot that brings workplace satisfaction rates up by giving an anonymous voice to employees.
+([Bronze Award](https://robinhood.engineering/robinhoods-hackathon-for-social-good-92c91a5726c3)): Slack bot that brings workplace satisfaction rates up by giving an anonymous voice to employees.
 
 ## Environment Setup: 
 You will need to setup Bolt Python following these steps: https://api.slack.com/start/building/bolt-python. Note that the bot does not currently use Bolt, except for defining some event listeners that are unused at the moment, but we will need it in the future for sending scheduled/automated messages. Also note that the `SLACK_BOT_TOKEN` and `SLACK_SIGNING_SECRET` are in the google doc. Do not put them here as when we make this repo public in the future, ppl will be able to find these secret tokens by looking through its history
